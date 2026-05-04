@@ -98,16 +98,24 @@ gcloud run jobs add-iam-policy-binding "$JOB_NAME" \
   --role="roles/run.invoker" \
   --quiet >/dev/null
 
-echo ">>> Granting Cloud Build SA permission to update the job (for CI/CD trigger)"
+echo ">>> Granting build SAs permissions for the CI/CD trigger"
+# New triggers default to the Compute Engine SA; legacy triggers use the Cloud Build SA.
+# Grant both so deploy.sh works regardless of which SA the trigger ends up using.
+COMPUTE_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 CLOUDBUILD_SA="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
-gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --member="serviceAccount:${CLOUDBUILD_SA}" \
-  --role="roles/run.developer" \
-  --condition=None --quiet >/dev/null
-gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT" \
-  --member="serviceAccount:${CLOUDBUILD_SA}" \
-  --role="roles/iam.serviceAccountUser" \
-  --quiet >/dev/null
+
+for sa in "$COMPUTE_SA" "$CLOUDBUILD_SA"; do
+  for role in roles/run.developer roles/artifactregistry.writer roles/logging.logWriter roles/storage.objectAdmin; do
+    gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+      --member="serviceAccount:${sa}" \
+      --role="$role" \
+      --condition=None --quiet >/dev/null
+  done
+  gcloud iam service-accounts add-iam-policy-binding "$SERVICE_ACCOUNT" \
+    --member="serviceAccount:${sa}" \
+    --role="roles/iam.serviceAccountUser" \
+    --quiet >/dev/null
+done
 
 echo ""
 echo ">>> Done."
