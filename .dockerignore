@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.example
+secrets/
+.git/
+.gitignore
+.claude/
+README.md
+clients.example.yaml

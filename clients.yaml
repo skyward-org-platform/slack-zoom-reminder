@@ -1,0 +1,46 @@
+# Copy this to clients.yaml and edit.
+# Run: uv run python reminder.py --dry-run
+
+timezone: America/New_York
+
+# Calendar IDs to scan. For a service account, share each calendar with the
+# service account's email (Reader access is enough). Use "primary" only if
+# you authenticate as a real user.
+calendar_ids:
+  - data@goskyward.io
+
+# Each event title is checked (case-insensitive) against `match`. First hit wins.
+clients:
+  - name: "S1"
+    match: "Source One"
+    slack_channel: "C08D8RB7ZFD"  # prod channel; ENV=test overrides via SLACK_CHANNEL_ID_TEST
+
+  # Auto-added from Slack channels matching `int-*` (excluding `int-*-clickup*`).
+  # Fill in `name` and `match` to enable, or delete the entry to skip.
+  - name: "Transport Media"
+    match: "Transport Media"
+    slack_channel: "C0AET7N3BRC"  # #int-transport-media
+  - name: "PLP"
+    match: "Philippe Lasry"
+    slack_channel: "C0AMWM2KS10"  # #int-phil-lasry
+  - name: "KWEV"
+    match: "Kwev"
+    slack_channel: "C0ALM59CCHF"  # #int-kwev
+  - name: "GCS"
+    match: "GCS"
+    slack_channel: "C08RNML7E2Z"  # #int-global-charter-services
+  - name: "ME"
+    match: "Manhattan Eye"
+    slack_channel: "C08RMBEH1PB"  # #int-manhattan-eye
+  - name: "TNA"
+    match: "TNA"
+    slack_channel: "C088Z79CKB7"  # #int-transport-net-aus
+  - name: "DS"
+    match: "Dental Shop"
+    slack_channel: "C08PT4825F0"  # #int-dental-shop
+  - name: "KGFFW"
+    match: "KGFFW"
+    slack_channel: "C093MPYK9NV"  # #int-kitchen-guard-ffwc
+  - name: "RRD"
+    match: "RRD"
+    slack_channel: "C08JEEFAQ0L"  # #int-ruth-ridgeway-designs

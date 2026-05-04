@@ -1,0 +1,19 @@
+[project]
+name = "slack-zoom-reminder"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "google-api-python-client>=2.195.0",
+    "google-auth>=2.50.0",
+    "python-dateutil>=2.9.0.post0",
+    "pyyaml>=6.0.3",
+    "slack-sdk>=3.41.0",
+]
+
+[dependency-groups]
+dev = [
+    "tdd-guard-pytest>=0.1.2",
+]
+
+[tool.pytest.ini_options]
+tdd_guard_project_root = "/mnt/d/Skyward/slack-zoom-reminder"

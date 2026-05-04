@@ -1,0 +1,19 @@
+# Copy this to clients.yaml and edit.
+# Run: uv run python reminder.py --dry-run
+
+timezone: America/New_York
+
+# Calendar IDs to scan. For a service account, share each calendar with the
+# service account's email (Reader access is enough). Use "primary" only if
+# you authenticate as a real user.
+calendar_ids:
+  - team-meetings@goskyward.io
+
+# Each event title is checked (case-insensitive) against `match`. First hit wins.
+clients:
+  - name: Acme Corp
+    match: "Acme"
+    slack_channel: "C0123456789"  # prod channel; ENV=test overrides via SLACK_CHANNEL_ID_TEST
+  - name: Globex
+    match: "Globex"
+    slack_channel: "C9876543210"
