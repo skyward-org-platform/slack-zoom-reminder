@@ -151,11 +151,7 @@ def main() -> int:
         if args.dry_run:
             continue
         try:
-            slack.chat_postMessage(
-                channel=channel,
-                text=msg,
-                username="Skyward Alerts",
-            )
+            slack.chat_postMessage(channel=channel, text=msg)
             print("  [sent]")
         except SlackApiError as e:
             print(f"  [error] {e.response['error']}", file=sys.stderr)
