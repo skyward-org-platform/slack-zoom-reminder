@@ -13,8 +13,8 @@ SECRET_NAME="slack-zoom-reminder-bot-token"
 SERVICE_ACCOUNT="slack-zoom-alerts@${PROJECT_ID}.iam.gserviceaccount.com"
 IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/reminder:latest"
 
-# 9am Eastern, every day. Cloud Scheduler handles DST via timeZone.
-CRON_SCHEDULE="0 9 * * *"
+# 8am Eastern, every day. Cloud Scheduler handles DST via timeZone.
+CRON_SCHEDULE="0 8 * * *"
 CRON_TZ="America/New_York"
 
 echo ">>> Project: $PROJECT_ID  Region: $REGION"
