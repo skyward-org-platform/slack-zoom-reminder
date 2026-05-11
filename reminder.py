@@ -74,10 +74,17 @@ def format_event_time(event: dict, tz: ZoneInfo) -> str:
 
 
 def build_message(client_name: str, events: list[dict], tz: ZoneInfo) -> str:
+    times = [format_event_time(ev, tz) for ev in events]
+    if len(times) == 1:
+        time_str = f"{times[0]} EST"
+    elif len(times) == 2:
+        time_str = f"{times[0]} and {times[1]} EST"
+    else:
+        time_str = ", ".join(times[:-1]) + f", and {times[-1]} EST"
     return (
-        "<!here> weekly RRD meeting is tomorrow at 11:00 AM EST, "
-        "please update all your client tasks today and drop a quick comment "
-        "on this message with any important updates from the past week."
+        f"<!here> weekly {client_name} meeting is tomorrow at {time_str}, "
+        f"please update all your client tasks today and drop a quick comment "
+        f"on this message with any important updates from the past week."
     )
 
 
