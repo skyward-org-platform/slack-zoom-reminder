@@ -58,13 +58,21 @@ echo ">>> Building image with Cloud Build"
 gcloud builds submit --tag "$IMAGE" .
 
 echo ">>> Creating or updating Cloud Run Job"
+ENV_VARS="ENV=prod"
+if [[ -n "${SLACK_CHANNEL_ID_TEST:-}" ]]; then
+  # Bake the test channel into the job so executions can flip ENV=test on the fly.
+  ENV_VARS="${ENV_VARS},SLACK_CHANNEL_ID_TEST=${SLACK_CHANNEL_ID_TEST}"
+else
+  echo "WARN: SLACK_CHANNEL_ID_TEST not set in env; test-mode executions will fail until it is."
+fi
+
 COMMON_ARGS=(
   --image="$IMAGE"
   --region="$REGION"
   --service-account="$SERVICE_ACCOUNT"
   --max-retries=1
   --task-timeout=300s
-  --set-env-vars="ENV=prod"
+  --set-env-vars="$ENV_VARS"
   --set-secrets="SLACK_BOT_TOKEN=${SECRET_NAME}:latest"
 )
 if gcloud run jobs describe "$JOB_NAME" --region="$REGION" >/dev/null 2>&1; then

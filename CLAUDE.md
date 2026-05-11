@@ -16,8 +16,12 @@ uv run python reminder.py --dry-run
 # Local dry run against a specific date
 uv run python reminder.py --dry-run --date 2026-05-06
 
-# Manually execute the deployed Cloud Run job
+# Manually execute the deployed Cloud Run job (uses ENV=prod baked into the job)
 gcloud run jobs execute slack-zoom-reminder --region=us-central1 --wait
+
+# Manually execute in TEST mode — overrides ENV for this run only; messages route to SLACK_CHANNEL_ID_TEST
+gcloud run jobs execute slack-zoom-reminder --region=us-central1 --wait \
+  --update-env-vars=ENV=test
 
 # Read logs from the most recent execution
 gcloud logging read 'resource.type="cloud_run_job" AND resource.labels.job_name="slack-zoom-reminder"' --limit=30 --format='value(textPayload)' --order=asc
@@ -45,8 +49,8 @@ gcloud builds triggers run slack-zoom-reminder-main --region=global --branch=mai
 |---|---|
 | `GOOGLE_APPLICATION_CREDENTIALS` | Path to SA key JSON. **Unset on Cloud Run** — uses the runtime SA's ADC. |
 | `SLACK_BOT_TOKEN` | Local dev only. In Cloud Run, comes from Secret Manager `slack-zoom-reminder-bot-token:latest`. |
-| `SLACK_CHANNEL_ID_TEST` | Required when `ENV=test`. All matched messages route here. |
-| `ENV` | `test` (everything → `SLACK_CHANNEL_ID_TEST`) or `prod` (per-client `slack_channel` from yaml). Cloud Run job has `ENV=prod`. |
+| `SLACK_CHANNEL_ID_TEST` | Required when `ENV=test`. All matched messages route here. Also baked into the deployed job (via `deploy.sh`) so `--update-env-vars=ENV=test` test executions work without a redeploy. |
+| `ENV` | `test` (everything → `SLACK_CHANNEL_ID_TEST`) or `prod` (per-client `slack_channel` from yaml). Cloud Run job has `ENV=prod`; override at execute time with `--update-env-vars=ENV=test`. |
 
 ## Operational gotchas
 
